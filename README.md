@@ -12,8 +12,9 @@ Ansible role to setup Sysinternals Sysmon on Windows system.
 
 ### Ansible
 It was tested on the following versions:
- * 2.3
+ * 2.3 (Not working! [ansible#23940](https://github.com/ansible/ansible/issues/23940) = template upload failing)
  * 2.4
+ * 2.5b2
 
 ### Operating systems
 
