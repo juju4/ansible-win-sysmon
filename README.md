@@ -1,8 +1,8 @@
 [![Build Status - Master](https://travis-ci.org/juju4/ansible-win-sysmon.svg?branch=master)](https://travis-ci.org/juju4/ansible-win-sysmon)
 [![Build Status - Devel](https://travis-ci.org/juju4/ansible-win-sysmon.svg?branch=devel)](https://travis-ci.org/juju4/ansible-win-sysmon/branches)(Syntax Only)
 
-[![Appveyor - Master](https://ci.appveyor.com/api/projects/status/xxx?svg=true)](https://ci.appveyor.com/project/juju4/ansible-win-sysmon)
-![Appveyor - Devel](https://ci.appveyor.com/api/projects/status/xxx/branch/devel?svg=true)
+[![Appveyor - Master](https://ci.appveyor.com/api/projects/status/t0mqe5h33m0d0fbl?svg=true)](https://ci.appveyor.com/project/juju4/ansible-win-sysmon)
+![Appveyor - Devel](https://ci.appveyor.com/api/projects/status/t0mqe5h33m0d0fbl/branch/devel?svg=true)
 
 # Windows Sysmon ansible role
 
