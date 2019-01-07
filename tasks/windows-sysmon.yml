@@ -38,10 +38,10 @@
     - name: install sysmon with defined config
       win_command: "{{ sysmon_path }} -n -accepteula -i \"{{ win_temp_dir }}\\{{ win_sysmon_template }}\""
       ignore_errors: true
-  when: win_sysmon_template != ''
+  when: win_sysmon_template
 
 - block:
     - name: install sysmon
       win_command: "{{ sysmon_path }} -i -n -accepteula"
       ignore_errors: true
-  when: win_sysmon_template == ''
+  when: not win_sysmon_template
