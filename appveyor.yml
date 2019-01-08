@@ -16,27 +16,30 @@ environment:
   CYGWIN: winsymlinks:nativestrict
 
   matrix:
-#  - TARGET: cygwin64
+#  - SUITE: default
+#    ANSIBLE_VERSION: 2.3.3.0
+#    ANSIBLE_EXTRA_VARS:
+#    TARGET: cygwin64
 #    CYG_ROOT: C:\cygwin64
 #    CYG_SETUP: C:\cygwin64\setup-x86_64.exe
 #    CYG_CACHE: C:\cygwin64\var\cache\setup
 #    CYG_BASH: C:\cygwin64\bin\sh
-#    ANSIBLE_VERSION: 2.3.3.0
-#    ANSIBLE_EXTRA_VARS:
-  - TARGET: cygwin64
-    CYG_ROOT: C:\cygwin64
-    CYG_SETUP: C:\cygwin64\setup-x86_64.exe
-    CYG_CACHE: C:\cygwin64\var\cache\setup
-    CYG_BASH: C:\cygwin64\bin\sh
+  - SUITE: default
     ANSIBLE_VERSION: 2.4.3.0
     ANSIBLE_EXTRA_VARS:
-  - TARGET: cygwin64
+    TARGET: cygwin64
     CYG_ROOT: C:\cygwin64
     CYG_SETUP: C:\cygwin64\setup-x86_64.exe
     CYG_CACHE: C:\cygwin64\var\cache\setup
     CYG_BASH: C:\cygwin64\bin\sh
+  - SUITE: default
     ANSIBLE_VERSION: 2.5.0b2
     ANSIBLE_EXTRA_VARS:
+    TARGET: cygwin64
+    CYG_ROOT: C:\cygwin64
+    CYG_SETUP: C:\cygwin64\setup-x86_64.exe
+    CYG_CACHE: C:\cygwin64\var\cache\setup
+    CYG_BASH: C:\cygwin64\bin\sh
 matrix:
   fast_finish: true
 
@@ -80,12 +83,12 @@ install:
 
 build: off
 test_script:
-- cmd: "%CYG_BASH% -lc 'ansible-playbook /cygdrive/c/projects/ansible-win-sysmon/test/integration/default/default.yml --syntax-check'"
-- cmd: "%CYG_BASH% -lc 'ansible-playbook -i /cygdrive/c/projects/ansible-win-sysmon/test/appveyor/inventory /cygdrive/c/projects/ansible-win-sysmon/test/integration/default/default.yml -vvv $ANSIBLE_EXTRA_VARS'"
+- cmd: "%CYG_BASH% -lc 'ansible-playbook /cygdrive/c/projects/ansible-win-sysmon/test/integration/%SUITE%/default.yml --syntax-check'"
+- cmd: "%CYG_BASH% -lc 'ansible-playbook -i /cygdrive/c/projects/ansible-win-sysmon/test/appveyor/inventory /cygdrive/c/projects/ansible-win-sysmon/test/integration/%SUITE%/default.yml -vvv $ANSIBLE_EXTRA_VARS'"
 
 after_test:
 - cmd: |
-    %CYG_BASH% -lc 'ansible-playbook -i /cygdrive/c/projects/ansible-win-sysmon/test/appveyor/inventory /cygdrive/c/projects/ansible-win-sysmon/test/integration/default/default.yml $ANSIBLE_EXTRA_VARS'
+    %CYG_BASH% -lc 'ansible-playbook -i /cygdrive/c/projects/ansible-win-sysmon/test/appveyor/inventory /cygdrive/c/projects/ansible-win-sysmon/test/integration/%SUITE%/default.yml $ANSIBLE_EXTRA_VARS'
 - ps: Get-Service -Displayname "*sysmon*"
 - ps: Get-Process "*sysmon*"
 - ps: Get-Acl -Path c:\ProgramData\chocolatey\lib\sysmon\tools\sysmon.exe
