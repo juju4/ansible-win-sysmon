@@ -57,6 +57,15 @@ $ ansible -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory -
 
 ## FAQ
 
+Reference links
+* Sysmon, https://gist.github.com/Neo23x0/f56bea38d95040b70cf5
+*  https://onedrive.live.com/view.aspx?resid=D026B4699190F1E6!2575 (RSA 2016)
+* http://www.darkoperator.com/blog/2014/8/8/sysinternals-sysmon
+```
+PS> Get-WinEvent -FilterHashtable @{logname="Microsoft-Windows-Sysmon/Operational";}
+```
+* native alternative for process auditing (not network?) on Windows Server 2016, Windows Server 2012 R2, Windows Server 2012 (ID 4688)
+
 ## License
 
 BSD 2-clause
