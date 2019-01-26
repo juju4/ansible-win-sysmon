@@ -12,3 +12,8 @@ win_sysmon_sha256: '848c3323324e8fa849024f87a2764f8575513463f339690056664861f99e
 ## note: file should be in current or template directory with .j2 extension
 win_sysmon_template: SysmonConfig-Neo23x0-workstations.xml
 #win_sysmon_template: SysmonConfig-moti.xml
+
+win_eventlog_maxsize: 315801600
+win_eventlog_retention: 0
+win_sysmon_eventlog_channels:
+  - Microsoft-Windows-Sysmon\/Operational
