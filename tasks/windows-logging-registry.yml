@@ -23,3 +23,10 @@
     datatype: dword
     data: "{{ win_eventlog_retention }}"
   with_items: "{{ win_sysmon_eventlog_channels }}"
+
+- name: Check Sysmon Logs channel registry entry
+  win_reg_stat:
+    path: "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WINEVT\\Channels\\{{ item }}"
+  with_items: "{{ win_sysmon_eventlog_channels }}"
+  register: logreg
+- debug: var=logreg
