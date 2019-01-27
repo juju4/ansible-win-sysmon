@@ -16,4 +16,4 @@ win_sysmon_template: SysmonConfig-Neo23x0-workstations.xml
 win_eventlog_maxsize: 315801600
 win_eventlog_retention: 0
 win_sysmon_eventlog_channels:
-  - Microsoft-Windows-Sysmon\/Operational
+  - Microsoft-Windows-Sysmon/Operational
