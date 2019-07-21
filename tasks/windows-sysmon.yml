@@ -16,7 +16,7 @@
         creates: "{{ win_temp_dir }}\\sysmon\\sysmon.exe"
     - set_fact:
         sysmon_path: "{{ win_temp_dir }}\\sysmon\\sysmon"
-  when: win_sysmon_direct
+  when: win_sysmon_direct|bool
 
 - block:
     - name: install sysmon with chocolatey
@@ -28,7 +28,7 @@
         #install_args: "--checksum {{ win_sysmon_sha256 }}"
     - set_fact:
         sysmon_path: "c:\\ProgramData\\chocolatey\\lib\\sysmon\\tools\\sysmon"
-  when: not win_sysmon_direct
+  when: not win_sysmon_direct|bool
 
 - block:
     - name: Copy Sysmon template
