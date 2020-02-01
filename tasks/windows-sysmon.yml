@@ -16,7 +16,7 @@
         creates: "{{ win_temp_dir }}\\sysmon\\sysmon.exe"
     - name: Set sysmon file path
       set_fact:
-        sysmon_path: "{{ win_temp_dir }}\\sysmon\\sysmon"
+        sysmon_path: "{{ win_temp_dir }}\\sysmon\\sysmon64"
   when: win_sysmon_direct|bool
 
 - block:
@@ -29,7 +29,7 @@
         #install_args: "--checksum {{ win_sysmon_sha256 }}"
     - name: Set sysmon file path
       set_fact:
-        sysmon_path: "c:\\ProgramData\\chocolatey\\lib\\sysmon\\tools\\sysmon"
+        sysmon_path: "c:\\ProgramData\\chocolatey\\lib\\sysmon\\tools\\sysmon64"
   when: not win_sysmon_direct|bool
 
 - block:
