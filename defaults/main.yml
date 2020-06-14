@@ -10,7 +10,7 @@ win_sysmon_direct: false
 win_sysmon_url: 'https://download.sysinternals.com/files/Sysmon.zip'
 win_sysmon_sha256: '848c3323324e8fa849024f87a2764f8575513463f339690056664861f99e4c5f'
 ## note: file should be in current or template directory with .j2 extension
-win_sysmon_template: SysmonConfig-Neo23x0-workstations.xml
+win_sysmon_template: SysmonConfig.xml
 #win_sysmon_template: SysmonConfig-moti.xml
 
 win_eventlog_maxsize: 315801600
