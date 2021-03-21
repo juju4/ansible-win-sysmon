@@ -2,7 +2,8 @@
 
 - block:
     - name: check if sysmon archive is present
-      win_stat: path="{{ win_temp_dir }}\\{{ win_sysmon_url | basename }}"
+      win_stat:
+        path: "{{ win_temp_dir }}\\{{ win_sysmon_url | basename }}"
       register: sysmondl
     - name: download sysmon
       win_get_url:
@@ -26,7 +27,7 @@
         state: present
         ignore_checksums: yes
         ## FIXME!
-        #install_args: "--checksum {{ win_sysmon_sha256 }}"
+        # install_args: "--checksum {{ win_sysmon_sha256 }}"
     - name: Set sysmon file path
       set_fact:
         sysmon_path: "c:\\ProgramData\\chocolatey\\lib\\sysmon\\tools\\sysmon64"
@@ -35,15 +36,15 @@
 - block:
     - name: Copy Sysmon template
       win_template:
-        src: "{{ win_sysmon_template }}.j2"
+        src: "{{ win_sysmon_template }}.j2"
         dest: "{{ win_temp_dir }}\\{{ win_sysmon_template }}"
     - name: install sysmon with defined config
       win_command: "{{ sysmon_path }} -n -accepteula -i \"{{ win_temp_dir }}\\{{ win_sysmon_template }}\""
       ignore_errors: true
-  when: win_sysmon_template != ''
+  when: win_sysmon_template|string
 
 - block:
     - name: install sysmon
       win_command: "{{ sysmon_path }} -i -n -accepteula"
       ignore_errors: true
-  when: win_sysmon_template == ''
+  when: not win_sysmon_template|string
