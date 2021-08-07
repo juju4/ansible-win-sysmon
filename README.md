@@ -69,4 +69,3 @@ PS> Get-WinEvent -FilterHashtable @{logname="Microsoft-Windows-Sysmon/Operationa
 ## License
 
 BSD 2-clause
-
