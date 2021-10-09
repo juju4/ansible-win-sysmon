@@ -508,15 +508,15 @@ https://github.com/MHaggis/sysmon-dfir
 				<CallTrace condition="not begin with">C:\Windows\SYSTEM32\wow64win.dll</CallTrace>
 			</Rule>
 			<CallTrace condition="begin with">UNKNOWN</CallTrace>
-			<!-- Inject AMSI Bypass via CobaltStrike BOF Ref: https://github.com/boku7/injectAmsiBypass -->
+			<!-- Typical ProcessAccess Pattern of CobaltStrike BOF Ref: e.g. https://github.com/boku7/injectAmsiBypass -->
 			<Rule groupRelation="and">
 				<CallTrace condition="contains">UNKNOWN</CallTrace>
-				<GrantedAccess condition="contains any">0x1028</GrantedAccess>
+				<GrantedAccess condition="contains any">0x1028;0x1fffff</GrantedAccess>
 			</Rule>
 			<!-- lsass.exe access with critical permission -->
 			<Rule groupRelation="and">
 				<TargetImage condition="end with">lsass.exe</TargetImage>
-				<GrantedAccess condition="contains any">0x40,0x1000,0x1010,0x1038,0x1410,0x1418,0x1438,0x143a,0x100000,0x1f0fff,0x1f1fff,0x1f2fff,0x1f3fff,0x1fffff</GrantedAccess> <!--0x1400 too noisy-->
+				<GrantedAccess condition="contains any">0x40;0x1000;0x1010;0x1038;0x1410;0x1418;0x1438;0x143a;0x100000;0x1f0fff;0x1f1fff;0x1f2fff;0x1f3fff;0x1fffff</GrantedAccess> <!--0x1400 too noisy-->
 			</Rule>
 			<!-- LittleCorporal generated MalDoc Ref: https://github.com/connormcgarr/LittleCorporal -->
 			<Rule groupRelation="and">
@@ -608,6 +608,10 @@ https://github.com/MHaggis/sysmon-dfir
 			<TargetFilename condition="contains">\hive_sam_</TargetFilename> <!-- Default output of HiveNightmare / SeriousSAM tools -->
 			<TargetFilename condition="is">C:\windows\temp\sam</TargetFilename> <!-- Default output of HiveNightmare / SeriousSAM tools -->
 			<TargetFilename condition="begin with">C:\Windows\System32\spool\drivers\x64</TargetFilename> <!-- PrinterNight -->
+			<Rule groupRelation="and"> <!-- CVE-2021-40444 https://twitter.com/RonnyTNL/status/1436334640617373699 -->
+				<Image condition="end with">\WINWORD.EXE</Image>
+				<TargetFilename condition="contains any">.cab;.inf</TargetFilename>
+			</Rule>
 		</FileCreate>
 	</RuleGroup>
 
@@ -811,6 +815,7 @@ https://github.com/MHaggis/sysmon-dfir
 			<TargetObject condition="contains">Microsoft\Cryptography\Providers\Trust\</TargetObject> <!-- Important trust registry values to monitor -->
 			<TargetObject condition="contains">WOW6432Node\Microsoft\Cryptography\Providers\Trust\</TargetObject> <!-- Important trust registry values to monitor -->
 			<TargetObject condition="contains">Control\Print\Environments\Windows x64\Drivers</TargetObject> <!-- PrinterNightmare coverage -->
+			<TargetObject name="Context,ContactedDomain" condition="end with">\EnableBHO</TargetObject> <!--Microsoft:Office: Contacted domains stored here 'HKEY_CURRENT_USER\<SID>\SOFTWARE\Microsoft\Office\16.0\Common\Internet\Server Cache\<domain>\EnableBHO' -->
 		</RegistryEvent>
 	</RuleGroup>
 
@@ -908,6 +913,9 @@ https://github.com/MHaggis/sysmon-dfir
 			<TargetFilename condition="end with">.vb</TargetFilename> <!--VisualBasicScripting files-->
 			<TargetFilename condition="end with">.vbe</TargetFilename> <!--VisualBasicScripting files-->
 			<TargetFilename condition="end with">.vbs</TargetFilename> <!--VisualBasicScripting files-->
+			<TargetFilename condition="end with">:Zone.Identifier</TargetFilename> <!-- Track Zone.Identifiers regardless of their download location -->
+			<TargetFilename condition="end with">:newads</TargetFilename> <!-- CobaltStrike BOF https://github.com/EspressoCake/Self_Deletion_BOF/blob/main/src/main.c -->
+
 		</FileCreateStreamHash>
 
 	<RuleGroup name="" groupRelation="or">
@@ -939,6 +947,7 @@ https://github.com/MHaggis/sysmon-dfir
 				<!-- Malware -->
 				<PipeName condition="contains any">\isapi_http;\isapi_dg;\isapi_dg2;\sdlrpc;\ahexec;\winsession;\lsassw;\46a676ab7f179e511e30dd2dc41bd388;\9f81f59bc58452127884ce513865ed20;\e710f28d59aa529d6792ca6ff0ca1b34;\rpchlp_3;\NamePipe_MoreWindows;\pcheap_reuse;\gruntsvc;\583da945-62af-10e8-4902-a8f205c72b2e;\bizkaz;\svcctl;\Posh;\jaccdpqnvbrrxlaf;\csexecsvc</PipeName>
 				<PipeName condition="contains any">\atctl;\userpipe;\iehelper;\sdlrpc;\comnap</PipeName>
+				<PipeName condition="contains">\pipe\</PipeName> <!-- EfsPotato https://twitter.com/SBousseaden/status/1429530155291193354?s=20 -->
 				<!-- Cobalt Strike Pipe Names -->
 				<PipeName condition="contains all">MSSE-;-server</PipeName>
 				<PipeName condition="begin with">\postex_</PipeName>
@@ -955,10 +964,30 @@ https://github.com/MHaggis/sysmon-dfir
 				<PipeName condition="begin with">\windows.update.manager</PipeName>
 				<PipeName condition="begin with">\ntsvcs_</PipeName>
 				<PipeName condition="begin with">\scerpc_</PipeName>
+				<!-- Malleable C2 profiles https://gist.github.com/MHaggis/6c600e524045a6d49c35291a21e10752 -->
+				<PipeName condition="begin with">\demoagent_</PipeName>
+				<PipeName condition="begin with">\PGMessagePipe</PipeName>
+				<PipeName condition="begin with">\MsFteWds</PipeName>
+				<PipeName condition="begin with">\f4c3</PipeName>
+				<PipeName condition="begin with">\fullduplex_</PipeName>
+				<PipeName condition="begin with">\msrpc_</PipeName>
+				<PipeName condition="begin with">\win\msrpc_</PipeName>
+				<PipeName condition="begin with">\f53f</PipeName>
+				<PipeName condition="begin with">\rpc_</PipeName>
+				<PipeName condition="begin with">\spoolss_</PipeName>
+				<PipeName condition="begin with">\win_svc</PipeName>
+				<PipeName condition="begin with">\SearchTextHarvester</PipeName>
+				<Rule groupRelation="and"> <!-- would be noisy otherwise as \Winsock2\CatalogchangeListener-???-0 is a legitimate pipe name -->
+					<PipeName condition="begin with">\Winsock2\CatalogChangeListener-</PipeName>
+					<PipeName condition="end with">-0,</PipeName>
+				</Rule>
 				<!-- these are standard pipes that appear frequently but the Sigma rules use RE to match exactly -->
 				<PipeName condition="begin with">\scerpc</PipeName>
 				<PipeName condition="begin with">\ntsvcs</PipeName>
 				<PipeName condition="begin with">\wkssvc</PipeName>
+				<!-- Other specific named pipes -->
+				<PipeName condition="contains">6e7645c4-32c5-4fe3-aabf-e94c2f4370e7</PipeName> <!-- LiquidSnake hacktool https://github.com/RiccardoAncarani/LiquidSnake -->
+				<Image condition="end with">\scrcons.exe</Image> <!-- Susupicious WMI Event Consumer creating a named pipe -->
 			</PipeEvent>
 		</RuleGroup>
 		<!-- we skip the connect pipe event since they could be to noisy and a CreatePipe event should come before these -->
