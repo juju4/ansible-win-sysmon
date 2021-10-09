@@ -93,6 +93,15 @@ after_test:
       True
   - cmd: sysmon -c
   - cmd: sysmon -s
+  - ps: |
+      Copy-Item "c:\ProgramData\chocolatey\lib\sysmon\tools\sysmon.exe" -Destination "C:\Test-CopyOnDeletePE.exe"
+      Remove-Item "C:\Test-CopyOnDeletePE.exe"
+      True
+  - ps: |
+      Get-ChildItem -Path c:\Windows\Sysmon
+      Get-EventLog -List
+      Get-EventLog -LogName "Microsoft-Windows-Sysmon" | Where-Object {$_.EventID -eq 23}
+      True
 
 notifications:
   - provider: Email
