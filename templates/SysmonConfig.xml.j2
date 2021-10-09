@@ -80,7 +80,7 @@ https://github.com/MHaggis/sysmon-dfir
 	<!-- <ProcessAccessConfig/> --> <!-- Would manually force-on ProcessAccess monitoring, even without configuration below. Included only documentation. -->
 	<!-- <PipeMonitoringConfig/> --> <!-- Would manually force-on PipeCreated / PipeConnected events, even without configuration below. Included only documentation. -->
 	<ArchiveDirectory>Windows\Sysmon</ArchiveDirectory>
-	<CopyOnDeletePE>true</CopyOnDeletePE>
+	<CopyOnDeleteExtensions>exe;txt</CopyOnDeleteExtensions>
 
 	<EventFiltering>
 
