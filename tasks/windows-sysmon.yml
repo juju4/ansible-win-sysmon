@@ -40,9 +40,15 @@
         dest: "{{ win_temp_dir }}\\{{ win_sysmon_template }}"
     - name: install sysmon with defined config
       win_command: "{{ sysmon_path }} -n -accepteula -i \"{{ win_temp_dir }}\\{{ win_sysmon_template }}\""
+      register: sysmon_install
+      changed_when: "'sysmon64 started.' in sysmon_install.stdout and 'The service sysmon64 is already registered.' not in sysmon_install.stdout"
+      failed_when: "'Failed to validate the xml configuration' in sysmon_install.stdout"
   when: win_sysmon_template|string
 
 - block:
     - name: install sysmon
       win_command: "{{ sysmon_path }} -i -n -accepteula"
+      register: sysmon_install
+      changed_when: "'sysmon64 started.' in sysmon_install.stdout and 'The service sysmon64 is already registered.' not in sysmon_install.stdout"
+      failed_when: "'Failed to validate the xml configuration' in sysmon_install.stdout"
   when: not win_sysmon_template|string
