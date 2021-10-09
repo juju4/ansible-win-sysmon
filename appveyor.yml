@@ -99,6 +99,10 @@ after_test:
   - ps: |
       Get-Content -Path "c:\sysmon-s.txt"
       True
+  - ps: |
+      Get-EventLog -List
+      Get-EventLog -LogName "Microsoft-Windows-Sysmon" -Newest 50
+      True
 
 notifications:
   - provider: Email
