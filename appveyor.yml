@@ -101,7 +101,7 @@ after_test:
       True
   - ps: |
       Get-WinEvent -ListLog *
-      Get-WinEvent -LogName "Microsoft-Windows-Sysmon" -MaxEvents 100
+      Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" -MaxEvents 100
       True
 
 notifications:
