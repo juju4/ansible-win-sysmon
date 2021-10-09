@@ -91,16 +91,24 @@ after_test:
   - ps: |
       Get-ChildItem -Path "HKLM:\SYSTEM\CurrentControlSet\Services\SysmonDrv\Parameters"
       True
-  - cmd: sysmon -c
-  - cmd: sysmon -s
+  - cmd: sysmon -c > c:\sysmon-c.txt
+  - ps: |
+      Get-Content -Path "c:\sysmon-c.txt"
+      True
+  - cmd: sysmon -s > c:\sysmon-s.txt
+  - ps: |
+      Get-Content -Path "c:\sysmon-s.txt"
+      True
   - ps: |
       Copy-Item "c:\ProgramData\chocolatey\lib\sysmon\tools\sysmon.exe" -Destination "C:\Test-CopyOnDeletePE.exe"
       Remove-Item "C:\Test-CopyOnDeletePE.exe"
       True
   - ps: |
-      Get-ChildItem -Path c:\Windows\Sysmon
-      Get-EventLog -List
-      Get-EventLog -LogName "Microsoft-Windows-Sysmon" | Where-Object {$_.EventID -eq 23}
+      Get-WinEvent -FilterHashtable @{ LogName='Microsoft-Windows-Sysmon/Operational'; Id='23' } -MaxEvents 100
+      True
+  - ps: |
+      Get-WinEvent -ListLog *
+      Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" -MaxEvents 100
       True
 
 notifications:
