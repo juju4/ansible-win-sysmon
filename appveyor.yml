@@ -100,8 +100,8 @@ after_test:
       Get-Content -Path "c:\sysmon-s.txt"
       True
   - ps: |
-      Get-EventLog -List
-      Get-EventLog -LogName "Microsoft-Windows-Sysmon" -Newest 50
+      Get-WinEvent -ListLog *
+      Get-WinEvent -LogName "Microsoft-Windows-Sysmon" -MaxEvents 100
       True
 
 notifications:
