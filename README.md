@@ -1,5 +1,5 @@
-[![Appveyor - Master](https://ci.appveyor.com/api/projects/status/t0mqe5h33m0d0fbl?svg=true)](https://ci.appveyor.com/project/juju4/ansible-win-sysmon)
-![Appveyor - Devel](https://ci.appveyor.com/api/projects/status/t0mqe5h33m0d0fbl/branch/devel?svg=true)
+[![Appveyor - Master](https://ci.appveyor.com/api/projects/status/t0mqe5h33m0d0fbl/branch/master?svg=true)](https://ci.appveyor.com/project/juju4/ansible-win-sysmon/branch/master)
+[![Appveyor - Devel](https://ci.appveyor.com/api/projects/status/t0mqe5h33m0d0fbl/branch/devel?svg=true)](https://ci.appveyor.com/project/juju4/ansible-win-sysmon/branch/devel)
 
 # Windows Sysmon ansible role
 
