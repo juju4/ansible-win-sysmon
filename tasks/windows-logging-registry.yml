@@ -9,7 +9,7 @@
   with_items: "{{ win_sysmon_eventlog_channels }}"
 
 - name: Debug | win_eventlog_maxsize
-  debug: var=win_eventlog_maxsize
+  ansible.builtin.debug: var=win_eventlog_maxsize
 - name: WINEVT Channels Event Log size review
   win_regedit:
     key: "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WINEVT\\Channels\\{{ item }}"
@@ -32,4 +32,4 @@
   with_items: "{{ win_sysmon_eventlog_channels }}"
   register: logreg
 - name: Debug | logreg
-  debug: var=logreg
+  ansible.builtin.debug: var=logreg
