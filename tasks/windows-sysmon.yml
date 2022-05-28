@@ -1,6 +1,7 @@
 ---
 
-- block:
+- name: Sysmon direct install
+  block:
     - name: check if sysmon archive is present
       win_stat:
         path: "{{ win_temp_dir }}\\{{ win_sysmon_url | basename }}"
@@ -20,7 +21,8 @@
         sysmon_path: "{{ win_temp_dir }}\\sysmon\\sysmon64"
   when: win_sysmon_direct|bool
 
-- block:
+- name: Sysmon chocolatey install
+  block:
     - name: install sysmon with chocolatey
       win_chocolatey:
         name: sysmon
@@ -33,7 +35,8 @@
         sysmon_path: "c:\\ProgramData\\chocolatey\\lib\\sysmon\\tools\\sysmon64"
   when: not win_sysmon_direct|bool
 
-- block:
+- name: Use sysmon template config
+  block:
     - name: Copy Sysmon template
       win_template:
         src: "{{ win_sysmon_template }}.j2"
@@ -45,7 +48,8 @@
       failed_when: "'Failed to validate the xml configuration' in sysmon_install.stdout"
   when: win_sysmon_template|string
 
-- block:
+- name: Use sysmon default config
+  block:
     - name: install sysmon
       win_command: "{{ sysmon_path }} -i -n -accepteula"
       register: sysmon_install
