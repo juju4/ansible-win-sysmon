@@ -1,12 +1,14 @@
 ---
 
 - name: Create ansible directories
-  win_file:
+  ansible.windows.win_file:
     path: "{{ item }}"
     state: directory
   with_items:
     - "{{ win_temp_dir }}"
     - "{{ win_log_dir }}"
 
-- include: windows-sysmon.yml
-- include: windows-logging-registry.yml
+- name: Import windows-sysmon
+  ansible.builtin.import_tasks: windows-sysmon.yml
+- name: Import windows-logging-registry
+  ansible.builtin.import_tasks: windows-logging-registry.yml

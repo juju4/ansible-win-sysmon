@@ -1,30 +1,31 @@
 ---
 
 - name: Sysmon direct install
+  when: win_sysmon_direct|bool
   block:
-    - name: check if sysmon archive is present
-      win_stat:
+    - name: Check if sysmon archive is present
+      ansible.windows.win_stat:
         path: "{{ win_temp_dir }}\\{{ win_sysmon_url | basename }}"
       register: sysmondl
-    - name: download sysmon
-      win_get_url:
+    - name: Download sysmon
+      ansible.windows.win_get_url:
         url: "{{ win_sysmon_url }}"
         dest: "{{ win_temp_dir }}\\{{ win_sysmon_url | basename }}"
       when: not sysmondl.stat.exists
-    - name: unzip sysmon
-      win_unzip:
+    - name: Unzip sysmon
+      community.windows.win_unzip:
         src: "{{ win_temp_dir }}\\{{ win_sysmon_url | basename }}"
         dest: "{{ win_temp_dir }}\\sysmon"
         creates: "{{ win_temp_dir }}\\sysmon\\sysmon.exe"
     - name: Set sysmon file path
       ansible.builtin.set_fact:
         sysmon_path: "{{ win_temp_dir }}\\sysmon\\sysmon64"
-  when: win_sysmon_direct|bool
 
 - name: Sysmon chocolatey install
+  when: not win_sysmon_direct|bool
   block:
-    - name: install sysmon with chocolatey
-      win_chocolatey:
+    - name: Install sysmon with chocolatey
+      chocolatey.chocolatey.win_chocolatey:
         name: sysmon
         state: present
         ignore_checksums: yes
@@ -33,26 +34,25 @@
     - name: Set sysmon file path
       ansible.builtin.set_fact:
         sysmon_path: "c:\\ProgramData\\chocolatey\\lib\\sysmon\\tools\\sysmon64"
-  when: not win_sysmon_direct|bool
 
 - name: Use sysmon template config
+  when: win_sysmon_template|string
   block:
     - name: Copy Sysmon template
-      win_template:
+      ansible.windows.win_template:
         src: "{{ win_sysmon_template }}.j2"
         dest: "{{ win_temp_dir }}\\{{ win_sysmon_template }}"
-    - name: install sysmon with defined config
-      win_command: "{{ sysmon_path }} -n -accepteula -i \"{{ win_temp_dir }}\\{{ win_sysmon_template }}\""
+    - name: Install sysmon with defined config
+      ansible.windows.win_command: "{{ sysmon_path }} -n -accepteula -i \"{{ win_temp_dir }}\\{{ win_sysmon_template }}\""
       register: sysmon_install
       changed_when: "'sysmon64 started.' in sysmon_install.stdout and 'The service sysmon64 is already registered.' not in sysmon_install.stdout"
       failed_when: "'Failed to validate the xml configuration' in sysmon_install.stdout"
-  when: win_sysmon_template|string
 
 - name: Use sysmon default config
+  when: not win_sysmon_template|string
   block:
-    - name: install sysmon
-      win_command: "{{ sysmon_path }} -i -n -accepteula"
+    - name: Install sysmon
+      ansible.windows.win_command: "{{ sysmon_path }} -i -n -accepteula"
       register: sysmon_install
       changed_when: "'sysmon64 started.' in sysmon_install.stdout and 'The service sysmon64 is already registered.' not in sysmon_install.stdout"
       failed_when: "'Failed to validate the xml configuration' in sysmon_install.stdout"
-  when: not win_sysmon_template|string
